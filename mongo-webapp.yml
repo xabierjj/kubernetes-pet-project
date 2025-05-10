@@ -1,0 +1,54 @@
+# This creates a Deployment that manages the lifecycle of your webapp Pod
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-deployment
+  labels:
+    app: webapp  # Label for identifying this Deployment
+spec:
+  replicas: 1  # Only one pod instance; scale up by increasing this
+  selector:
+    matchLabels:
+      app: webapp  # This Deployment will manage Pods with this label
+  template:
+    metadata:
+      labels:
+        app: webapp  # This label must match the selector above
+    spec:
+      containers:
+      - name: webapp
+        image: nanajanashia/k8s-demo-app:v1.0  # Docker image to run in the Pod
+        ports:
+        - containerPort: 3000  # Port that the app inside the container listens on
+        env:
+        - name: USER_NAME
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secret        # Use value from a Kubernetes Secret named 'mongo-secret'
+              key: mongo-user           # Specifically the key 'mongo-user'
+        - name: USER_PWD
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secret
+              key: mongo-password 
+        - name: DB_URL
+          valueFrom:
+            configMapKeyRef:
+              name: mongo-config        # Use value from a ConfigMap named 'mongo-config'
+              key: mongo-url            # Specifically the key 'mongo-url'
+
+
+# This Service exposes your webapp to the outside world via NodePort
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-service
+spec:
+  type: NodePort  # Makes the service accessible from outside the cluster via <minikube-ip>:nodePort
+  selector:
+    app: webapp  # Matches Pods with this label
+  ports:
+    - protocol: TCP
+      port: 3000          # Port exposed inside the cluster
+      targetPort: 3000    # Port inside the container
+      nodePort: 30100     # Port on the node (VM) that you can access in your browser

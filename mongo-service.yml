@@ -1,0 +1,18 @@
+# Service for MongoDB — gives it a stable network identity and port mapping
+apiVersion: v1
+kind: Service
+metadata:
+  # The name clients in the cluster will use to connect to MongoDB (e.g., "mongo-service")
+  name: mongo-service
+spec:
+  # This selector finds the matching Pod(s) with label app: mongo-db
+  # It forwards traffic to those Pods
+  selector:
+    app: mongo-db
+  ports:
+    - protocol: TCP
+      # This is the port that other services in the cluster will use to talk to MongoDB
+      port: 8080
+
+      # This is the port on the container that MongoDB is actually listening on
+      targetPort: 27017

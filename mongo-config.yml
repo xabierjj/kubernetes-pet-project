@@ -1,0 +1,8 @@
+# ConfigMap is used to store non-sensitive configuration data (like environment variables)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-config  # This name is used by Pods to reference the ConfigMap
+data:
+  # This key-value pair will be exposed as an environment variable
+  mongo-url: mongo-service

@@ -1,0 +1,34 @@
+# This Deployment manages a single instance of a MongoDB database
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-db  # Name of the deployment
+  labels:
+    app: mongo-db  # Labels are key-value tags used for selection and grouping
+spec:
+  replicas: 1  # Only one MongoDB instance; use StatefulSet for proper replica sets
+  selector:
+    matchLabels:
+      app: mongo-db  # The Deployment will manage Pods with this label
+  template:
+    metadata:
+      labels:
+        app: mongo-db  # Labels applied to the Pod; must match selector above
+    spec:
+      containers:
+      - name: mongo-db
+        image: mongo:6.0  # Official MongoDB Docker image
+        ports:
+        - containerPort: 27017  # The port MongoDB listens on inside the container
+        env:
+        # These env vars are used by the MongoDB image to create an admin user at startup
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secret      # Pulls the value from a Kubernetes Secret
+              key: mongo-user
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom: 
+            secretKeyRef:
+              name: mongo-secret
+              key: mongo-password
