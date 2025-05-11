@@ -6,7 +6,7 @@ This project demonstrates a basic web application connected to MongoDB using Kub
 ### 1. Start Minikube
 
 ```
-minikube start
+minikube start --driver=docker
 ```
 
 ### 2. Apply resources
@@ -20,19 +20,40 @@ kubectl apply -f webapp-service.yaml
 
 ```
 
-### 3. Verify resources
+### 3. Check Resource Status
 ```
 kubectl get all
 ```
 
 ### Access Web App
-This doesn't work if you're running Minikube with the QEMU driver on macOS (especially Apple Silicon), the following command will not work:
+If using the Docker driver, you can open the service in your browser:
+
 ```
 minikube service webapp-service
 ```
 
-Instead, use kubectl port-forward:
+
+### Load image to minikube
+```
+minikube image load <image name>
+```
+
+### Delete all resources
 
 ```
-kubectl port-forward service/webapp-service 3000:3000
+kubectl delete all --all
 ```
+
+### Restart 
+
+```
+kubectl rollout restart deployment/<deployment-name>
+```
+
+### Get pod logs
+
+````
+kubectl logs <pod name>
+
+```
+

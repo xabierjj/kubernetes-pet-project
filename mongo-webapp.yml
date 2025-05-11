@@ -37,7 +37,8 @@ spec:
               name: mongo-config        # Use value from a ConfigMap named 'mongo-config'
               key: mongo-url            # Specifically the key 'mongo-url'
 
-
+# This is necessary to apply both the service and the deployment
+---
 # This Service exposes your webapp to the outside world via NodePort
 apiVersion: v1
 kind: Service
@@ -51,4 +52,5 @@ spec:
     - protocol: TCP
       port: 3000          # Port exposed inside the cluster
       targetPort: 3000    # Port inside the container
+      # The range of valid ports is 30000-32767 
       nodePort: 30100     # Port on the node (VM) that you can access in your browser
