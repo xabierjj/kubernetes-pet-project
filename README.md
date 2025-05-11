@@ -3,13 +3,13 @@ This project demonstrates a basic web application connected to MongoDB using Kub
 
 ## Commands 
 
-### 1. Start Minikube
+### Start Minikube
 
 ```
 minikube start --driver=docker
 ```
 
-### 2. Apply resources
+### Apply resources
 ```
 kubectl apply -f mongo-secret.yaml
 kubectl apply -f mongo-config.yaml
@@ -20,7 +20,7 @@ kubectl apply -f webapp-service.yaml
 
 ```
 
-### 3. Check Resource Status
+### Check Resource Status
 ```
 kubectl get all
 ```
